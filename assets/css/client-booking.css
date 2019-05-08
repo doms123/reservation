@@ -1,0 +1,84 @@
+
+.search-results .two-col {
+  width: calc(100% - 30px);
+}
+.search-results .row-title {
+  font-weight: bold;
+  margin: 0;
+}
+.search-results {
+  margin-top: 0;
+}
+.bookNow {
+  color: #fff;
+  padding: 0.8em;
+  font-size: 0.9em;
+  cursor: pointer;
+  border: none;
+  background: #715633;
+  outline: none;
+  margin: 1.5em 0 0;
+  font-weight: 400;
+  text-transform: capitalize;
+  letter-spacing: 1px;
+  border: 1px solid #ccc;
+}
+#modal-book-addEdit {
+  font-size: 14px;
+}
+#modal-book-addEdit .modal-title {
+  text-align: left;
+}
+#modal-book-addEdit .modal-title span {
+  margin: 0;
+  line-height: 1.42857143;
+  font-size: 18px;
+  font-weight: 700;
+}
+.agile_form label {
+  margin-left: 0;
+}
+
+strong {
+  font-weight: bold !important;
+}
+
+.reservationDetails p {
+  margin-bottom: 10px;
+}
+
+.reservationDetails h4,
+.guestPaymentDetails h4,
+.bookingPolicy h4 {
+  text-align: left;
+  margin-bottom: 10px;
+  border-bottom: 2px solid #715633;
+  padding-bottom: 8px;
+  font-size: 15px;
+  font-weight: bold;
+  text-transform: uppercase;
+}
+
+.guestPaymentDetails h4,
+.bookingPolicy h4 {
+  margin-top: 30px;
+}
+
+button[disabled], html input[disabled] {
+  cursor: default;
+  opacity: .7;
+}
+
+.bookingNo {
+  font-size: 36px;
+  text-align: center;
+  margin: 30px 0px;
+}
+
+#modal-notes .modal-dialog {
+  width: 430px !important;
+}
+
+.modal-title {
+  text-align: left;
+}

@@ -1,0 +1,15 @@
+.main-header{
+  position: fixed !important;
+  width: 100%;
+}
+.main-sidebar {
+  position: fixed !important;
+}
+.content-wrapper {
+  margin-top: 50px;
+}
+.fc-day-grid-event {
+  margin: 5px 2px 0;
+  padding: 4px 5px;
+}
+

@@ -1,0 +1,24 @@
+.mb20 {
+  margin-bottom: 20px;
+}
+.roomTbl td:last-child {
+  width: 175px;
+  text-align: center;
+}
+.roomTbl td:last-child button {
+  margin-right: 15px;
+}
+.roomTbl th:last-child {
+  text-align: center;
+}
+.roomTbl td {
+  vertical-align: middle !important;
+}
+#modal-book-delete .modal-dialog {
+  width: 300px;
+}
+
+.searchTxt {
+  width: 260px !important;
+}
+

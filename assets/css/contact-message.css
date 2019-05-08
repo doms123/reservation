@@ -1,0 +1,27 @@
+.contactBtn {
+    color: #fff;
+    padding: 0.8em;
+    font-size: 0.9em;
+    cursor: pointer;
+    border: none;
+    background: #715633;
+    outline: none;
+    margin: 1.5em 0 0;
+    font-weight: 400;
+    text-transform: capitalize;
+    width: 100%;
+    letter-spacing: 1px;
+    border: 1px solid #ccc;
+}
+
+.mb20 {
+    margin-bottom: 20px;
+}
+
+.modal-dialog {
+/*    width: 300px !important;*/
+}
+
+.searchTxt {
+    width: 260px !important;
+}

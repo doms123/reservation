@@ -1,0 +1,97 @@
+.mb20 {
+  margin-bottom: 20px;
+}
+.orderTbl td:nth-child(2),
+.orderListTbl td:nth-child(2) {
+  width: 200px;
+}
+.orderTbl td:nth-child(4),
+.orderListTbl td:nth-child(4) {
+  width: 170px;
+}
+.orderListTbl td:first-child,
+.orderTbl td:first-child {
+  width: 115px;
+}
+.orderTbl td:last-child {
+  width: 175px;
+  text-align: center;
+}
+.orderTbl td:last-child button {
+  margin-right: 15px;
+}
+.orderTbl th:last-child {
+  text-align: center;
+}
+.orderTbl th, .orderTbl td {
+  vertical-align: middle !important;
+}
+.modal-dialog {
+  width: 553px;
+}
+#modal-room-delete .modal-dialog {
+  width: 300px;
+}
+.itemLabel {
+  display: block;
+}
+.select2-container {
+  width: 100% !important;
+}
+.select2-container .select2-selection--single {
+  height: 35px !important;
+}
+.addCartBtn {
+  float: right;
+}
+.cartWrap {
+  clear: both;
+  margin: 50px 0;
+}
+.cartTbody td:last-child {
+  width: 100px !important;
+}
+.cartTbody td:last-child button {
+  margin: 0;
+}
+.gtWrap {
+  text-align: right;
+  background: #00a65a !important;
+  color: #fff;
+  padding: 5px 14px;
+  display: none;
+  margin-top: 10px;
+}
+.tableOrder td:last-child {
+  width: 310px;
+}
+.orderCount {
+  background-color: #dd4b39 !important;
+  color: #fff;
+  font-size: 12px;
+  padding: 2px 7px;
+  border-radius: 50%;
+  display: inline-block;
+  margin-right: 5px;
+}
+
+.orderListTbl th:last-child {
+  text-align: center;
+}
+
+.orderListTbl td:last-child {
+  width: 180px;
+  text-align: center;
+}
+
+.orderListTbl td:last-child button {
+  margin-left: 15px;
+}
+
+#modal-order .modal-dialog {
+  width: 700px;
+}
+
+.searchTxt {
+  width: 200px !important;
+}

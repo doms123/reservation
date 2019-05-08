@@ -1,0 +1,21 @@
+.gTotal {
+  display: none;
+}
+.gTotalWrap {
+  padding: 5px 20px;
+  text-align: right;
+  font-weight: bold;
+  font-size: 16px;
+}
+.btnPrint {
+  margin-bottom: 10px;
+}
+
+.searchTxtBook {
+  width: 200px !important;
+}
+
+.searchTxtItem {
+  width: 150px;
+}
+
