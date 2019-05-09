@@ -30,6 +30,7 @@ $(document).ready(function() {
       //send all the form data along with the files:
       this.on('sendingmultiple', function(data, xhr, formData) {
         formData.append('name', $('.name').val());
+        formData.append('type', $('.roomType').val());
         formData.append('desc', $('.desc').val());
         formData.append('price', $('.price').val());
         formData.append('roomCount', $('.roomCount').val());
@@ -89,6 +90,7 @@ $(document).ready(function() {
         url: `${baseUrl}/addEditRoom`,
         data: {
           name: $('.name').val(),
+          type: $('.roomType').val(),
           desc: $('.desc').val(),
           price: $('.price').val(),
           roomCount: $('.roomCount').val(),
@@ -147,6 +149,7 @@ $(document).ready(function() {
               html += '<tr>';
                 html += `<td><img src="../uploads/${imgArr[x]}" width="100px"></td>`;
                 html += `<td>${result[x]['name']}</td>`;
+                html += `<td>${result[x]['type']}</td>`;
                 html += `<td>${result[x]['description']}</td>`;
                 html += `<td>${numberWithCommas(result[x]['price'])}</td>`;
                 html += `<td>${result[x]['roomCount']}</td>`;
@@ -224,7 +227,7 @@ $(document).ready(function() {
       type: 'POST',
       url: `${baseUrl}/singleRoom`,
       data: { roomId: paramsArrEdit[1] },
-      success: function ({ fileList, data: { name, description, price, roomCount, guestCount } }) {
+      success: function ({ fileList, data: { name, type, description, price, roomCount, guestCount } }) {
         $.each(fileList, function(key,value) {
           imageArr.push({ name: value.name });
           image = { name: value.name, size: value.size };
@@ -232,10 +235,11 @@ $(document).ready(function() {
           dzClosure.emit("thumbnail", image, `../uploads/${value.name}`);
         });
 
-        $('.name').val(name)
-        $('.desc').val(description)
-        $('.price').val(price)
-        $('.roomCount').val(roomCount)
+        $('.name').val(name);
+        $('.roomType option[value="'+type+'"]').attr('selected','selected');
+        $('.desc').val(description);
+        $('.price').val(price);
+        $('.roomCount').val(roomCount);
         $('.guestCount').val(guestCount);
       }
     });

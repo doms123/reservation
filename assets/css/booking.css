@@ -1,6 +1,10 @@
 .mb20 {
   margin-bottom: 20px;
 }
+.roomTbl td:first-child {
+  width: 20px;
+  text-align: center;
+}
 .roomTbl td:last-child {
   width: 175px;
   text-align: center;
@@ -14,11 +18,16 @@
 .roomTbl td {
   vertical-align: middle !important;
 }
-#modal-book-delete .modal-dialog {
+#modal-book-delete .modal-dialog ,
+#modal-book-delete-multiple .modal-dialog {
   width: 300px;
 }
 
 .searchTxt {
-  width: 260px !important;
+  width: 320px !important;
+}
+
+.btnDeleteAll {
+  display: none;
 }
 

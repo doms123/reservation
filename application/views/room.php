@@ -20,22 +20,13 @@
           <div class="box-body table-responsive no-padding">
             <div class="box-header">
               <h3 class="box-title">Room Type Details</h3>
-              <!-- <div class="box-tools">
-                <form class="searchForm">
-                  <div class="input-group input-group-sm" style="width: 150px;">
-                    <input type="text" class="form-control pull-right searchTxt" placeholder="Search name, price">
-                    <div class="input-group-btn">
-                      <button type="submit" class="btn btn-default"><i class="fa fa-search"></i></button>
-                    </div>
-                  </div>
-                </form>
-              </div> -->
             </div>
             <table class="roomTbl table table-hover">
               <thead>
               <tr>
                 <th>Image</th>
                 <th>Name</th>
+                <th>Type</th>
                 <th>Description</th>
                 <th>Price</th>
                 <th>Room Count</th>
@@ -66,8 +57,17 @@
                 <label for="roomTypeImage">Room Type Image</label>
                 <div class="dropzone" id="myDropzone"></div>
                 <div class="form-group">
-                  <label for="roomType">Room Type Name</label>
-                  <input type="text" class="form-control name" placeholder="Input type of room">
+                  <label for="roomType">Room Name</label>
+                  <input type="text" class="form-control name" placeholder="Input room name">
+                </div>
+                <div class="form-group">
+                  <label for="roomType">Room Type</label>
+                  <select class="form-control roomType">
+                    <option value="Family suite">Family suite</option>
+                    <option value="Premier suite">Premier suite</option>
+                    <option value="Deluxe">Deluxe</option>
+                  </select>
+                  <!-- <input type="text" class="form-control name" placeholder="Input type of room"> -->
                 </div>
                 <div class="form-group">
                   <label for="roomType">Room Type Description</label>

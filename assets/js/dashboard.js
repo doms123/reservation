@@ -63,10 +63,12 @@ $(document).ready(function() {
     const newResult = allBook.filter(function (el) {
       const bookNo = el.bookNo.toLowerCase();
       const roomName = el.roomName.toLowerCase();
+      const type = el.type.toLowerCase();
       const price = el.price.toLowerCase();
 
       return bookNo.includes(newSearch) || 
              price.includes(newSearch) ||
+             type.includes(newSearch) ||
              roomName.includes(newSearch);
     });
 
@@ -79,6 +81,7 @@ $(document).ready(function() {
           html += `<tr>`;
             html += `<td>${newResult[x].bookNo}</td>`;
             html += `<td>${newResult[x].roomName}</td>`;
+            html += `<td>${newResult[x].type}</td>`;
             html += `<td>${newResult[x].roomNo}</td>`;
             html += `<td>${convertDate(newResult[x].dateAdded)}</td>`;
             html += `<td>${numberWithCommas(newResult[x].price)}</td>`;
@@ -118,6 +121,7 @@ $(document).ready(function() {
               html += `<tr>`;
                 html += `<td>${result[x].bookNo}</td>`;
                 html += `<td>${result[x].roomName}</td>`;
+                html += `<td>${result[x].type}</td>`;
                 html += `<td>${result[x].roomNo}</td>`;
                 html += `<td>${convertDate(result[x].dateAdded)}</td>`;
                 html += `<td>${numberWithCommas(result[x].price)}</td>`;
@@ -226,7 +230,15 @@ $(document).ready(function() {
     });
   }
 
-  $('.btnPrint').click(function() {
+  $('.btnPrintBook').click(function() {
+    $('.orderingWrap').addClass('no-print');
+    $('.bookingWrap').removeClass('no-print');
+    window.print();
+  });
+
+  $('.btnPrintOrder').click(function() {
+    $('.bookingWrap').addClass('no-print');
+    $('.orderingWrap').removeClass('no-print');
     window.print();
   });
   

@@ -66,15 +66,15 @@
           </div>
         </div>
       </div>
-      <div class="col-md-12">
-        <button class="btn btn-primary btn-sm btnPrint no-print"><i class="fa fa-print"></i> Print Reports</button>
+      <div class="col-md-12 bookingWrap">
         <div class="box">
           <div class="box-header">
             <h3 class="box-title">Booking Revenue Report</h3>
             <div class="box-tools no-print">
               <form class="searchFormBook">
+                <button type="button" class="btn btn-primary btn-sm btnPrintBook no-print"><i class="fa fa-print"></i> Print Reports</button>
                 <div class="input-group input-group-sm" style="width: 150px;">
-                  <input type="text" class="form-control pull-right searchTxtBook" placeholder="Search book no., room type, price">
+                  <input type="text" class="form-control pull-right searchTxtBook" placeholder="Search book no., room, type, price">
                   <div class="input-group-btn">
                     <button type="submit" class="btn btn-default"><i class="fa fa-search"></i></button>
                   </div>
@@ -87,7 +87,8 @@
               <thead>
                 <tr>
                   <th>Booking No.</th>
-                  <th>Type of Room</th>
+                  <th>Name</th>
+                  <th>Type</th>
                   <th>Room no.</th>
                   <th>Booking Date</th>
                   <th>Price</th>
@@ -100,13 +101,14 @@
           <p class="gTotalWrap">Grand Total: Php <span class="gTotalBook"></span></p>
         </div>
       </div>
-      <div class="col-md-12">
+      <div class="col-md-12 orderingWrap">
         <div class="box">
           <div class="box-header">
             <h3 class="box-title">Ordering Revenue Report</h3>
             <div class="box-tools no-print">
               <form class="searchFormItem">
-                <div class="input-group input-group-sm" style="width: 150px;">
+                <button type="button" class="btn btn-primary btn-sm btnPrintOrder no-print"><i class="fa fa-print"></i> Print Reports</button>
+                <div class="input-group input-group-sm" style="width: 180px;">
                   <input type="text" class="form-control pull-right searchTxtItem" placeholder="Search item name, price">
                   <div class="input-group-btn">
                     <button type="submit" class="btn btn-default"><i class="fa fa-search"></i></button>

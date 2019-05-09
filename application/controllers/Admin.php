@@ -66,6 +66,7 @@ class admin extends CI_Controller {
 
 	public function addEditRoom() {
     $name       = sanitize($this->input->post('name'));
+    $type       = sanitize($this->input->post('type'));
     $desc       = $this->input->post('desc');
     $price      = sanitize($this->input->post('price'));
     $roomCount  = sanitize($this->input->post('roomCount'));
@@ -109,9 +110,9 @@ class admin extends CI_Controller {
 
       if ($editId) {
         $allImages = array_merge($_FILES['file']['name'] , $imgArr);
-        $getEditRoom	= $this->model->getEditRoom(serialize($allImages), $name, $desc, $price, $roomCount, $guestCount, $editId);
+        $getEditRoom	= $this->model->getEditRoom(serialize($allImages), $name, $desc, $price, $roomCount, $guestCount, $editId, $type);
       } else {
-        $getAddRoom	= $this->model->getAddRoom($images, $name, $desc, $price, $roomCount, $guestCount);
+        $getAddRoom	= $this->model->getAddRoom($images, $name, $desc, $price, $roomCount, $guestCount, $type);
       }
      
       $data = array(
@@ -120,7 +121,7 @@ class admin extends CI_Controller {
     } else {
 
       if ($editId) {
-        $getEditRoom	= $this->model->getEditRoom(serialize($imgArr), $name, $desc, $price, $roomCount, $guestCount, $editId);
+        $getEditRoom	= $this->model->getEditRoom(serialize($imgArr), $name, $desc, $price, $roomCount, $guestCount, $editId, $type);
       }
 
       $data = array(
@@ -308,6 +309,21 @@ class admin extends CI_Controller {
 
     $data = array(
       'success' => 1,
+    );
+
+    genJson($data);
+  }
+
+  public function deleteBooks() {
+    $ids = $this->input->post('ids');
+
+    for($x = 0; $x < count($ids); $x++) {
+      $getDeleteBook	= $this->model->getDeleteBook($ids[$x]);
+    }
+
+    $data = array(
+      'success' => 1,
+      '$ids' => $ids
     );
 
     genJson($data);

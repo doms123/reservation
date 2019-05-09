@@ -123,10 +123,14 @@ $(document).ready(function() {
       const guestName = el.guestName.toLowerCase();
       const guestContact = el.guestContact.toLowerCase();
       const guestEmail = el.guestEmail.toLowerCase();
+      const room = el.name.toLowerCase();
+      const type = el.type.toLowerCase();
 
       return guestName.includes(newSearch) || 
             bookNo.includes(newSearch) || 
             guestContact.includes(newSearch) || 
+            room.includes(newSearch) || 
+            type.includes(newSearch) || 
             guestEmail.includes(newSearch);
     });
 
@@ -145,6 +149,7 @@ $(document).ready(function() {
             status = 'Cancelled';
           }
           html += `<tr>`;
+            html += `<td><input type="checkbox"></td>`;
             html += `<td>${newResult[x].bookNo}</td>`;
             html += `<td>${newResult[x].guestName}</td>`;
             html += `<td>${newResult[x].guestContact}</td>`;
@@ -152,6 +157,7 @@ $(document).ready(function() {
             html += `<td>${convertDate(newResult[x].checkIn)}</td>`;
             html += `<td>${convertDate(newResult[x].checkOut)}</td>`;
             html += `<td>${newResult[x].name}</td>`;
+            html += `<td>${newResult[x].type}</td>`;
             html += `<td>Room ${newResult[x].roomNo}</td>`;
             html += `<td>${status}</td>`;
             html += `<td class="room-action-btn">`;
@@ -192,6 +198,7 @@ $(document).ready(function() {
                 status = 'Cancelled';
               }
               html += `<tr>`;
+                html += `<td><input type="checkbox" class="delCheck" data-id="${result[x].bookId}"></td>`;
                 html += `<td>${result[x].bookNo}</td>`;
                 html += `<td>${result[x].guestName}</td>`;
                 html += `<td>${result[x].guestContact}</td>`;
@@ -199,6 +206,7 @@ $(document).ready(function() {
                 html += `<td>${moment(result[x].checkIn).format('MM/DD/YYYY')}</td>`;
                 html += `<td>${moment(result[x].checkOut).format('MM/DD/YYYY')}</td>`;
                 html += `<td>${result[x].name}</td>`;
+                html += `<td>${result[x].type}</td>`;
                 html += `<td>Room ${result[x].roomNo}</td>`;
                 html += `<td>${status}</td>`;
                 html += `<td class="room-action-btn">`;
@@ -216,6 +224,53 @@ $(document).ready(function() {
       }
     });
   }
+
+  $('.bookTbody').delegate('.delCheck', 'click', function() {
+    const deleteCount = $('.delCheck[type="checkbox"]:checked').length;
+    if (deleteCount) {
+      $('.deleteCounter').text(deleteCount);
+      $('.btnDeleteAll').show();
+    } else {
+      $('.btnDeleteAll').hide();
+    }
+  });
+
+  $('.btnDeleteAll').click(function() {
+    $('#modal-book-delete-multiple').modal('show');
+    // let ids = [];
+    // $('.delCheck[type="checkbox"]:checked').each(function () {
+    //   ids.push($(this).attr('data-id'));
+    // });
+
+    
+  });
+
+  $(".deleteBookBtnMultiple").click(function() {
+    let ids = [];
+    $('.delCheck[type="checkbox"]:checked').each(function () {
+      ids.push($(this).attr('data-id'));
+    });
+    $.ajax({
+      type: 'POST',
+      url: `${baseUrl}/deleteBooks`,
+      data: { ids },
+      success: function({ success }) {
+        if (success) {
+          bookList();
+          $.toast({
+            heading: 'Success',
+            text: 'Book has been deleted',
+            icon: 'success',
+            loader: false,
+            position: 'bottom-center'
+          });
+          $('#modal-book-delete-multiple').modal('hide');
+        }
+      }
+    });
+  });
+
+
 
   $('.bookTbody').delegate('.editBtn', 'click', function() {
     const id = $(this).attr('data-id');

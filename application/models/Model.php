@@ -7,16 +7,16 @@ class Model extends CI_Model {
 		return count($query->row());
   }
   
-  public function getAddRoom($images, $name, $desc, $price, $roomCount, $guestCount) {
-    $sql 	= "INSERT INTO tbl_room(`img`, `name`, `description`, `price`, `roomCount`, `guestCount`, `active`) VALUES (?, ?, ?, ?, ?, ?, ?)";
-    $data = array($images, $name, $desc, $price, $roomCount, $guestCount, 1);
+  public function getAddRoom($images, $name, $desc, $price, $roomCount, $guestCount, $type) {
+    $sql 	= "INSERT INTO tbl_room(`img`, `name`, `type`, `description`, `price`, `roomCount`, `guestCount`, `active`) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
+    $data = array($images, $name, $type, $desc, $price, $roomCount, $guestCount, 1);
     $query 	= $this->db->query($sql, $data);
     return $this->db->insert_id();
   }
 
-  public function getEditRoom($images, $name, $desc, $price, $roomCount, $guestCount , $editId) {
-    $sql = "UPDATE tbl_room SET `img` = ?, `name` = ?, `description` = ?, `price` = ?, `roomCount` = ?, `guestCount` = ?, `active` = ? WHERE `roomId` = ?";
-    $data = array($images, $name, $desc, $price, $roomCount, $guestCount, 1, $editId);
+  public function getEditRoom($images, $name, $desc, $price, $roomCount, $guestCount , $editId, $type) {
+    $sql = "UPDATE tbl_room SET `img` = ?, `name` = ?, `description` = ?, `price` = ?, `roomCount` = ?, `guestCount` = ?, `active` = ?, `type` = ? WHERE `roomId` = ?";
+    $data = array($images, $name, $desc, $price, $roomCount, $guestCount, 1, $type, $editId);
     $query 	= $this->db->query($sql, $data);
     return $query;
   }
@@ -60,7 +60,7 @@ class Model extends CI_Model {
   }
 
   public function getBookList() {
-    $sql = "SELECT b.bookNo, b.bookId, b.guestName, b.guestContact, b.guestEmail, b.checkIn, b.checkOut, r.name, b.roomNo, b.status FROM tbl_booking b INNER JOIN tbl_room r ON r.roomId = b.roomId WHERE b.active = ?";
+    $sql = "SELECT b.bookNo, b.bookId, b.guestName, b.guestContact, b.guestEmail, b.checkIn, b.checkOut, r.name, b.roomNo, b.status, r.type FROM tbl_booking b INNER JOIN tbl_room r ON r.roomId = b.roomId WHERE b.active = ? ORDER BY b.dateAdded DESC";
     return $this->db->query($sql, 1);
   }
 
@@ -212,7 +212,7 @@ class Model extends CI_Model {
   }
 
   public function getBookRevenue() {
-    $sql = "SELECT b.bookNo, b.bookId, b.guestName, b.guestContact, b.guestEmail, b.checkIn, b.checkOut, r.name, b.roomNo, b.status, b.dateAdded, r.price, r.name as roomName
+    $sql = "SELECT b.bookNo, b.bookId, b.guestName, b.guestContact, b.guestEmail, b.checkIn, b.checkOut, r.name, b.roomNo, b.status, b.dateAdded, r.price, r.name as roomName, r.type
             FROM tbl_booking b INNER JOIN tbl_room r ON r.roomId = b.roomId WHERE b.status = 1 AND b.active = 1";
     return $this->db->query($sql)->result();
   }

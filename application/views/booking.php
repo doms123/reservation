@@ -25,7 +25,7 @@
                   <div class="box-tools">
                     <form class="searchForm">
                       <div class="input-group input-group-sm" style="width: 150px;">
-                        <input type="text" class="form-control pull-right searchTxt" placeholder="Search booking no, customer, contact, email">
+                        <input type="text" class="form-control pull-right searchTxt" placeholder="Search booking no, customer, contact, email, room, type">
                         <div class="input-group-btn">
                           <button type="submit" class="btn btn-default"><i class="fa fa-search"></i></button>
                         </div>
@@ -36,13 +36,15 @@
                 <table class="roomTbl table table-hover">
                   <thead>
                   <tr>
+                    <th></th>
                     <th>Booking No.</th>
                     <th>Customer</th>
                     <th>Contact</th>
                     <th>Email</th>
                     <th>Check In</th>
                     <th>Check Out</th>
-                    <th>Type of Room</th>
+                    <th>Room</th>
+                    <th>Type</th>
                     <th>Room no.</th>
                     <th>Status</th>
                     <th>Action</th>
@@ -53,6 +55,7 @@
                 </table>
               </div>
             </div>
+            <button class=" btn btn-danger btn-sm btnDeleteAll"><i class="fa fa-trash"></i> Delete (<span class="deleteCounter">0</span>)  items</button>
           </div>
         </div>
       </div>
@@ -140,6 +143,26 @@
             <div class="modal-footer">
               <button type="button" class="btn btn-default pull-left" data-dismiss="modal">Close</button>
               <button type="submit" class="btn btn-primary deleteBookBtn">Ok</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="modal fade" id="modal-book-delete-multiple">
+        <div class="modal-dialog">
+          <div class="modal-content">
+            <div class="modal-header">
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+              </button>
+              <h4 class="modal-title">Delete Book</h4>
+            </div>
+            <div class="modal-body">
+              <p>Are you sure you want to delete?</p>
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-default pull-left" data-dismiss="modal">Close</button>
+              <button type="submit" class="btn btn-primary deleteBookBtnMultiple">Ok</button>
             </div>
           </div>
         </div>

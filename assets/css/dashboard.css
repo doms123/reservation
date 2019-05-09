@@ -7,15 +7,19 @@
   font-weight: bold;
   font-size: 16px;
 }
-.btnPrint {
+.btnPrintBook {
   margin-bottom: 10px;
+  position: absolute;
+  right: 260px;
 }
-
+.btnPrintOrder {
+  margin-bottom: 10px;
+  position: absolute;
+  right: 205px;
+}
 .searchTxtBook {
   width: 200px !important;
 }
-
 .searchTxtItem {
   width: 150px;
 }
-
