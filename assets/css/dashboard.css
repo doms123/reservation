@@ -23,3 +23,7 @@
 .searchTxtItem {
   width: 150px;
 }
+.small-box-footer {
+  display: inline-block;
+  margin-top: 13px;
+}

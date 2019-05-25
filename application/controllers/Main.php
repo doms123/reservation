@@ -6,9 +6,9 @@ class main extends CI_Controller {
     $this->load->view('client/index');
   }
 
-  public function order() {
-    $this->load->view('client/order');
-  }
+  // public function order() {
+  //   $this->load->view('client/order');
+  // }
 
   public function booking() {
     $this->load->view('client/reservation');

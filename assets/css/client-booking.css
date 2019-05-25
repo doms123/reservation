@@ -82,3 +82,45 @@ button[disabled], html input[disabled] {
 .modal-title {
   text-align: left;
 }
+
+.reserveCalendar {
+  color: #fff;
+  padding: 0.8em;
+  font-size: 0.9em;
+  cursor: pointer;
+  border: none;
+  background: #715633;
+  outline: none;
+  margin: 0;
+  font-weight: 400;
+  text-transform: capitalize;
+  letter-spacing: 1px;
+  border: 1px solid #ccc;
+}
+
+.reserveCalendar i {
+  color: #fff;
+}
+
+.text-left {
+  text-align: right;
+}
+
+#modal-calendar .modal-dialog {
+  width: 1000px;
+}
+
+.fc-view-container * {
+  color: #fff;
+  font-size: 14px;
+}
+
+.fc-ltr .fc-basic-view .fc-day-top .fc-day-number {
+  color: #000;
+  font-size: 12px;
+}
+
+#calendar {
+  border: 1px solid #ddd;
+}
+

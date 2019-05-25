@@ -28,16 +28,16 @@ $(document).ready(function() {
     })
   }
 
-  orderCount();
-  function orderCount(orderId) {
+  messageCount();
+  function messageCount(orderId) {
     $.ajax({
       type: 'POST',
-      url: `${baseUrl}/orderCount`,
+      url: `${baseUrl}/messageCount`,
       data: {
         orderId,
       },
       success: function ({ success, count }) {
-        $('.orderCount').text(count);     
+        $('.messageCount').text(count);     
       }
     });
   }
@@ -191,54 +191,54 @@ $(document).ready(function() {
     }
   });
 
-  orderRevenue();
-  function orderRevenue() {
-    $.ajax({
-      type: 'GET',
-      url: `${baseUrl}/orderRevenue`,
-      data: {},
-      success: function ({ result, success }) {
-        allOrder = result;
-        const maxLoop = result.length;
-        let html;
-        let gTotal = 0;
-        if (success) {
-          if (maxLoop) {
-            for (let x = 0; x < maxLoop; x++) {
-              html += `<tr>`;
-                html += `<td>${x + 1}</td>`;
-                html += `<td>${result[x].title}</td>`;
-                html += `<td>${result[x].quantity}</td>`;
-                html += `<td>${convertDate(result[x].orderDate)}</td>`;
-                html += `<td>${numberWithCommas(result[x].price)}</td>`;
-              html += `</tr>`;
+  // orderRevenue();
+  // function orderRevenue() {
+  //   $.ajax({
+  //     type: 'GET',
+  //     url: `${baseUrl}/orderRevenue`,
+  //     data: {},
+  //     success: function ({ result, success }) {
+  //       allOrder = result;
+  //       const maxLoop = result.length;
+  //       let html;
+  //       let gTotal = 0;
+  //       if (success) {
+  //         if (maxLoop) {
+  //           for (let x = 0; x < maxLoop; x++) {
+  //             html += `<tr>`;
+  //               html += `<td>${x + 1}</td>`;
+  //               html += `<td>${result[x].title}</td>`;
+  //               html += `<td>${result[x].quantity}</td>`;
+  //               html += `<td>${convertDate(result[x].orderDate)}</td>`;
+  //               html += `<td>${numberWithCommas(result[x].price)}</td>`;
+  //             html += `</tr>`;
 
-              gTotal += Number(result[x].price);
-            }
+  //             gTotal += Number(result[x].price);
+  //           }
 
-            $('.gTotal').show();
-          } else {
-            $('.gTotal').hide();
-            html += '<tr><td style="text-align: left;">No order report yet.</td></tr>';
-          }
+  //           $('.gTotal').show();
+  //         } else {
+  //           $('.gTotal').hide();
+  //           html += '<tr><td style="text-align: left;">No order report yet.</td></tr>';
+  //         }
 
-          $('.gTotalOrder').text(numberWithCommas(gTotal));
+  //         $('.gTotalOrder').text(numberWithCommas(gTotal));
 
-          $('.orderRevenueTbody').html(html);
-        }
-      }
-    });
-  }
+  //         $('.orderRevenueTbody').html(html);
+  //       }
+  //     }
+  //   });
+  // }
 
   $('.btnPrintBook').click(function() {
-    $('.orderingWrap').addClass('no-print');
+    // $('.orderingWrap').addClass('no-print');
     $('.bookingWrap').removeClass('no-print');
     window.print();
   });
 
   $('.btnPrintOrder').click(function() {
     $('.bookingWrap').addClass('no-print');
-    $('.orderingWrap').removeClass('no-print');
+    // $('.orderingWrap').removeClass('no-print');
     window.print();
   });
   

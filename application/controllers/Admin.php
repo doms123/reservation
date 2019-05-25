@@ -49,15 +49,15 @@ class admin extends CI_Controller {
     $this->load->view('room');
   }
 
-  public function order() {
-    auth($this->session->userdata('isLogin'));
-    $this->load->view('order');
-  }
+  // public function order() {
+  //   auth($this->session->userdata('isLogin'));
+  //   $this->load->view('order');
+  // }
 
-  public function product() {
-    auth($this->session->userdata('isLogin'));
-    $this->load->view('product');
-  }
+  // public function product() {
+  //   auth($this->session->userdata('isLogin'));
+  //   $this->load->view('product');
+  // }
 
   public function logout() {
     $this->session->sess_destroy();
@@ -240,30 +240,30 @@ class admin extends CI_Controller {
     $status       = sanitize($this->input->post('status'));
     $editId       = sanitize($this->input->post('editId'));
 
-    if ($status == 1) {
-      $config = Array(
-        'protocol' => 'smtp',
-        'smtp_host' => 'ssl://smtp.googlemail.com',
-        'smtp_port' => 465,
-        'smtp_user' => 'hhacienda8@gmail.com',
-        'smtp_pass' => 'Pass123!',
-        'mailtype' => 'html',
-        'charset' => 'iso-8859-1',
-        'wordwrap' => TRUE
-      );
+    // if ($status == 1) {
+    //   $config = Array(
+    //     'protocol' => 'smtp',
+    //     'smtp_host' => 'ssl://smtp.googlemail.com',
+    //     'smtp_port' => 465,
+    //     'smtp_user' => 'hhacienda8@gmail.com',
+    //     'smtp_pass' => 'Pass123!',
+    //     'mailtype' => 'html',
+    //     'charset' => 'iso-8859-1',
+    //     'wordwrap' => TRUE
+    //   );
 
-      $this->load->library('email', $config);
-      $this->email->from('hhacienda8@gmail.com', 'admin');
-      $this->email->to('dominicksanchez30@gmail.com');
-      $this->email->subject('Email test');
+    //   $this->load->library('email', $config);
+    //   $this->email->from('hhacienda8@gmail.com', 'admin');
+    //   $this->email->to('dominicksanchez30@gmail.com');
+    //   $this->email->subject('Email test');
 
 
-      $this->email->message('Test message');
-      $this->email->set_newline("\r\n");
+    //   $this->email->message('Test message');
+    //   $this->email->set_newline("\r\n");
 
-      $result = $this->email->send();
-      $this->email->print_debugger();
-    }
+    //   $result = $this->email->send();
+    //   $this->email->print_debugger();
+    // }
     
     if ($editId) {
       $getEditBook	= $this->model->getEditBook($guestName, $guestContact, $guestEmail, $checkIn, $checkOut, $roomType, $roomNo, $status, $editId);
@@ -273,8 +273,8 @@ class admin extends CI_Controller {
 
     $data = array(
       'success' => 1,
-      'mail' => $result,
-      'debug' => $this->email->print_debugger()
+      // 'mail' => $result,
+      // 'debug' => $this->email->print_debugger()
     );
 
     genJson($data);
@@ -314,11 +314,12 @@ class admin extends CI_Controller {
     genJson($data);
   }
 
-  public function deleteBooks() {
+  public function multipleBookAction() {
     $ids = $this->input->post('ids');
+    $type = $this->input->post('type');
 
     for($x = 0; $x < count($ids); $x++) {
-      $getDeleteBook	= $this->model->getDeleteBook($ids[$x]);
+      $getDeleteBook	= $this->model->multipleBookAction($ids[$x], $type);
     }
 
     $data = array(
@@ -385,6 +386,7 @@ class admin extends CI_Controller {
         }
       }
     }
+    
 
     $newRoomArr = [];
     for ($d = 0; $d < count($roomsArr); $d++) {
@@ -411,10 +413,23 @@ class admin extends CI_Controller {
       }
     }
 
+    $getAllArr = [];
+    foreach ($getAllRooms as $gRooms) {
+      $object = new stdClass();
+      $object->name = $gRooms->name;
+      $object->img = unserialize($gRooms->img);
+      $object->description = $gRooms->description;
+      $object->price = $gRooms->price;
+      $object->roomId = $gRooms->roomId;
+      $object->guestCount = $gRooms->guestCount;
+      array_push($getAllArr, $object);
+    }
+
 
     $data = array(
       'success' => 1,
-      'result' => $newRoomArr
+      'result' => $newRoomArr,
+      'allRooms' => $getAllArr,
     );
 
     genJson($data);
@@ -431,14 +446,106 @@ class admin extends CI_Controller {
     $roomNo       = sanitize($this->input->post('roomNo'));
 
     $insertId = $this->model->getAddBook($bookNo, $guestName, $guestContact, $guestEmail, $checkIn, $checkOut, $roomType, $roomNo, 2);
+    $getSingleBook = $this->model->getSingleBook($insertId)->row();
 
-    $getSingleBook = $this->model->getSingleBook($insertId);
+    $config = Array(
+      'protocol' => 'smtp',
+      'smtp_host' => 'ssl://smtp.googlemail.com',
+      'smtp_port' => 465,
+      'smtp_user' => 'hhacienda8@gmail.com',
+      'smtp_pass' => 'Pass123!',
+      'mailtype' => 'html',
+      'charset' => 'iso-8859-1',
+      'wordwrap' => TRUE
+    );
+
+    $this->load->library('email', $config);
+    $this->email->from('hhacienda8@gmail.com', 'Admin');
+    $this->email->to($guestEmail);
+    $this->email->subject('HACIENDA GALEA RESERVATION');
+
+    $checkIn = new DateTime($getSingleBook->checkIn);
+    $checkInDate = date_format($checkIn, 'N, F d Y');
+
+    $checkOut = new DateTime($getSingleBook->checkOut);
+    $checkOutDate = date_format($checkOut, 'N, F d Y');
+
+    $totalAmount = $getSingleBook->totalDays * $getSingleBook->price;
+
+    $message = '
+<p>Hi '.$guestName.', thank you for making a reservation!</p>
+<br>
+<p>Please see the following reservation details</p>
+
+<table style="border: 1px solid #000; border-collapse: collapse;">
+  <tr>
+    <td style="border: 1px solid #000; padding: 5px;">
+      <strong>Booking No.:</strong> '.$getSingleBook->bookNo.'
+    </td>
+  </tr>
+  <tr>
+    <td style="border: 1px solid #000; padding: 5px;">
+      <strong>Room Name:</strong> '.$getSingleBook->name.'
+    </td>
+  </tr>
+  <tr>
+    <td style="border: 1px solid #000; padding: 5px;">
+      <strong>Room Number:</strong> '.$getSingleBook->roomNo.'
+    </td>
+  </tr>
+  <tr>
+    <td style="border: 1px solid #000; padding: 5px;">
+      <strong>Number of Guest:</strong> '.$getSingleBook->guestCount.'
+    </td>
+  </tr>
+  <tr>
+    <td style="border: 1px solid #000; padding: 5px;">
+      <strong>Check-in:</strong> '.$checkInDate.' from 14:00
+    </td>
+  </tr>
+  <tr>
+    <td style="border: 1px solid #000; padding: 5px;">
+      <strong>Check-out:</strong> '.$checkOutDate.' until 11:00
+    </td>
+  </tr>
+  <tr>
+    <td style="border: 1px solid #000; padding: 5px;">
+      <strong>Description: </strong> '.$getSingleBook->description.'
+    </td>
+  </tr>
+  <tr>
+    <td style="border: 1px solid #000; padding: 5px;">
+      <strong>Total Amount:</strong> Php '.number_format($totalAmount, 2).'
+    </td>
+  </tr>
+</table>
+
+<p>To confirm your reservation, please send to this BDO account no.: <strong>001820479151</strong> an amount of '.number_format($totalAmount / 2, 2).' for the 50% reservation down payment </p>
+<br>
+<p><strong>Booking Policies</strong></p>
+<p>If payment has been made:</p>
+<ul>
+	<li>30% deposit payment will be forfeited if cancellation is made two (2) days before the function</li>
+    <li>50% deposit payment will be forfeited if cancellation is made one (1) day before the function</li>
+</ul>
+<br>
+<p>Best Regards,</p>
+<p style="margin-top: -10px;">Hacienda Galea Management</p>
+';
+
+    $this->email->message($message);
+    $this->email->set_newline("\r\n");
+
+    $result = $this->email->send();
+
+   
 
 
     $data = array(
       'success' => 1,
       'bookNo' => $bookNo,
       'response' => $getSingleBook,
+      'mail' => $result
     );
 
     genJson($data);
@@ -646,6 +753,17 @@ class admin extends CI_Controller {
     genJson($data);
   }
 
+  public function messageCount() {
+    $getMessageCount = $this->model->getMessageCount();
+
+    $data = array(
+      'success' => 1,
+      'count' => $getMessageCount
+    );
+
+    genJson($data);
+  }
+
   public function bookRevenue() {
     $getBookRevenue = $this->model->getBookRevenue();
 
@@ -677,8 +795,64 @@ class admin extends CI_Controller {
     
     $getAddContact = $this->model->getAddContact($firstName, $lastName, $email, $contact, $message);
 
+    $config = Array(
+      'protocol' => 'smtp',
+      'smtp_host' => 'ssl://smtp.googlemail.com',
+      'smtp_port' => 465,
+      'smtp_user' => 'hhacienda8@gmail.com',
+      'smtp_pass' => 'Pass123!',
+      'mailtype' => 'html',
+      'charset' => 'iso-8859-1',
+      'wordwrap' => TRUE
+    );
+
+    $this->load->library('email', $config);
+    $this->email->from($email, 'customer');
+    $this->email->to('hhacienda8@gmail.com');
+    $this->email->subject($firstName.' '.$lastName.' - Customer Message');
+
+    $this->email->message($message);
+    $this->email->set_newline("\r\n");
+
+    $result = $this->email->send();
+
     $data = array(
       'success' => 1,
+      'mail' => $result
+    );
+
+    genJson($data);
+  }
+
+  public function replyMessage() {
+    $replyMessage = sanitize($this->input->post('replyMessage'));
+    $replyTitle = sanitize($this->input->post('replyTitle'));
+    $email = sanitize($this->input->post('email'));
+
+    $config = Array(
+      'protocol' => 'smtp',
+      'smtp_host' => 'ssl://smtp.googlemail.com',
+      'smtp_port' => 465,
+      'smtp_user' => 'hhacienda8@gmail.com',
+      'smtp_pass' => 'Pass123!',
+      'mailtype' => 'html',
+      'charset' => 'iso-8859-1',
+      'wordwrap' => TRUE
+    );
+
+    $this->load->library('email', $config);
+    $this->email->from('hhacienda8@gmail.com', 'admin');
+    $this->email->to($email);
+    $this->email->subject($replyTitle);
+
+    $this->email->message($replyMessage);
+    $this->email->set_newline("\r\n");
+
+    $result = $this->email->send();
+
+    $data = array(
+      'success' => 1,
+      'mail' => $result
     );
 
     genJson($data);

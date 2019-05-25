@@ -5,6 +5,7 @@ $(function() {
 
     $('.contactForm').submit(function(e) {
         e.preventDefault();
+        $('.contactBtn').attr('disabled', true).text('Sending Message');
         const firstName = $('.firstName').val();
         const lastName = $('.lastName').val();
         const email = $('.email').val();
@@ -22,6 +23,7 @@ $(function() {
                 message
             },
             success: function ({ success }) {
+                $('.contactBtn').removeAttr('disabled').text('Send message');
                 if (success) {
                     $.toast({
                         heading: 'Success',
@@ -98,6 +100,7 @@ $(function() {
                                 html += `<td>${result[x].contact}</td>`;
                                 html += `<td>${result[x].message}</td>`;
                                 html += `<td>${convertDate(result[x].dateAdded)}</td>`;
+                                html += `<td><button class="btn btn-primary btn-sm btnReply" data-email="${result[x].email}"><i class="fa fa-reply"></i> Reply</button></td>`;
                                 html += `<td><button class="btn btn-danger btn-sm btnDelete" data-id="${result[x].contactId}"><i class="fa fa-trash"></i> Delete</button></td>`;
                             html += `</tr>`;
                         }
@@ -110,6 +113,45 @@ $(function() {
             }
         });
     }
+
+    $('.contactTbody').delegate('.btnReply', 'click', function() {
+        const email = $(this).attr('data-email');
+        $('.emailReplyTo').text(email);
+        $('#modal-contact-reply').modal('show').attr('data-email', email);
+    });
+
+    $('.sendReplyBtn').click(function() {
+        const replyMessage = $('.replyMessage').val();
+        const replyTitle = $('.replyTitle').val();
+        const email = $('#modal-contact-reply').attr('data-email');
+        $(this).attr('disabled', true).text('Sending...');
+        $.ajax({
+            type: 'POST',
+            url: `${baseUrl}/replyMessage`,
+            data: {
+                replyMessage,
+                replyTitle,
+                email
+            },
+            success: function ({ success }) {
+                $('.sendReplyBtn').removeAttr('disabled').text('Send');
+
+                if (success) {
+                    $('#modal-contact-reply').modal('hide');
+                    $('.replyMessage').val('');
+                    $('.replyTitle').val('');
+
+                    $.toast({
+                        heading: 'Success',
+                        text: 'Message was sent',
+                        icon: 'success',
+                        loader: false,
+                        position: 'bottom-center'
+                    });    
+                }
+            }
+        });
+    });
 
     $('.contactTbody').delegate('.btnDelete', 'click', function() {
         const deleteId = $(this).attr('data-id');

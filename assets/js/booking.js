@@ -149,7 +149,7 @@ $(document).ready(function() {
             status = 'Cancelled';
           }
           html += `<tr>`;
-            html += `<td><input type="checkbox"></td>`;
+          html += `<td><input type="checkbox" class="checkBox" data-id="${newResult[x].bookId}"></td>`;
             html += `<td>${newResult[x].bookNo}</td>`;
             html += `<td>${newResult[x].guestName}</td>`;
             html += `<td>${newResult[x].guestContact}</td>`;
@@ -189,7 +189,6 @@ $(document).ready(function() {
           if (maxLoop) {
             for (let x = 0; x < maxLoop; x++) {
               let status;
-              console.log('newResult', result);
               if (result[x].status == 1) {
                 status = 'Confirmed';
               } else if (result[x].status == 2) {
@@ -198,7 +197,7 @@ $(document).ready(function() {
                 status = 'Cancelled';
               }
               html += `<tr>`;
-                html += `<td><input type="checkbox" class="delCheck" data-id="${result[x].bookId}"></td>`;
+                html += `<td><input type="checkbox" class="checkBox" data-id="${result[x].bookId}"></td>`;
                 html += `<td>${result[x].bookNo}</td>`;
                 html += `<td>${result[x].guestName}</td>`;
                 html += `<td>${result[x].guestContact}</td>`;
@@ -225,46 +224,73 @@ $(document).ready(function() {
     });
   }
 
-  $('.bookTbody').delegate('.delCheck', 'click', function() {
-    const deleteCount = $('.delCheck[type="checkbox"]:checked').length;
-    if (deleteCount) {
-      $('.deleteCounter').text(deleteCount);
-      $('.btnDeleteAll').show();
+  $('.bookTbody').delegate('.checkBox', 'click', function() {
+    const checkCounter = $('.checkBox[type="checkbox"]:checked').length;
+    if (checkCounter) {
+      $('.checkCounter').text(checkCounter);
+      $('.multipleBtns').show();
     } else {
-      $('.btnDeleteAll').hide();
+      $('.multipleBtns').hide();
+    }
+  });
+
+  $('.checkAll').click(function() {
+    const isChecked = $(this).is(":checked");
+    if (isChecked) {
+      $('.checkBox').prop('checked', true);
+      const checkCounter = $('.checkBox[type="checkbox"]:checked').length;
+      $('.checkCounter').text(checkCounter);
+      $('.multipleBtns').show();
+    } else {
+      $('.checkBox').prop('checked', false);
+      $('.multipleBtns').hide();
     }
   });
 
   $('.btnDeleteAll').click(function() {
     $('#modal-book-delete-multiple').modal('show');
-    // let ids = [];
-    // $('.delCheck[type="checkbox"]:checked').each(function () {
-    //   ids.push($(this).attr('data-id'));
-    // });
-
-    
   });
 
-  $(".deleteBookBtnMultiple").click(function() {
+  $('.btnConfirmAll').click(function() {
+    $('#modal-book-confirm-multiple').modal('show');
+  });
+
+  $('.btnCancelAll').click(function() {
+    $('#modal-book-cancel-multiple').modal('show');
+  });
+
+  $(".multipleBookAction").click(function() {
+    const type = $(this).attr('data-type');
     let ids = [];
-    $('.delCheck[type="checkbox"]:checked').each(function () {
+    $('.checkBox[type="checkbox"]:checked').each(function () {
       ids.push($(this).attr('data-id'));
     });
     $.ajax({
       type: 'POST',
-      url: `${baseUrl}/deleteBooks`,
-      data: { ids },
+      url: `${baseUrl}/multipleBookAction`,
+      data: { ids, type },
       success: function({ success }) {
+        let text;
+        if (type == 'confirm') {
+          text = 'confirmed';
+        } else if (type == 'delete') {
+          text = 'deleted';
+        } else if (type == 'cancel') {
+          text = 'cancelled';
+        }
         if (success) {
           bookList();
           $.toast({
             heading: 'Success',
-            text: 'Book has been deleted',
+            text: `Book has been ${text}`,
             icon: 'success',
             loader: false,
             position: 'bottom-center'
           });
+          $('#modal-book-confirm-multiple').modal('hide');
+          $('#modal-book-cancel-multiple').modal('hide');
           $('#modal-book-delete-multiple').modal('hide');
+          $('.multipleBtns').hide();
         }
       }
     });

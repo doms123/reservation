@@ -19,7 +19,9 @@
   vertical-align: middle !important;
 }
 #modal-book-delete .modal-dialog ,
-#modal-book-delete-multiple .modal-dialog {
+#modal-book-delete-multiple .modal-dialog,
+#modal-book-confirm-multiple .modal-dialog,
+#modal-book-cancel-multiple .modal-dialog {
   width: 300px;
 }
 
@@ -27,7 +29,11 @@
   width: 320px !important;
 }
 
-.btnDeleteAll {
+.multipleBtns {
   display: none;
+}
+
+.multipleBtns .btnCancelAll {
+  margin: 0 20px;
 }
 

@@ -22,13 +22,13 @@
       <li class="room">
         <a href="<?php echo base_url('admin/room'); ?>"><i class="fa fa-hotel"></i> <span>Rooms</span></a>
       </li>
-      <li class="order treeview">
+      <!-- <li class="order treeview">
         <a href=""><i class="fa fa-shopping-cart"></i> <span>Manage Order</span></a>
         <ul class="treeview-menu productTree">
           <li class="product"><a href="<?php echo base_url('admin/product'); ?>"><i class="fa fa-circle-o"></i>Products</a></li>
           <li class="order"><a href="<?php echo base_url('admin/order'); ?>"><i class="fa fa-circle-o"></i>Order</a></li>
         </ul>
-      </li>
+      </li> -->
       <li class="contactMessage">
         <a href="<?php echo base_url('admin/contactMessage'); ?>"><i class="fa fa-envelope"></i> <span>Contact Messages</span></a>
       </li>

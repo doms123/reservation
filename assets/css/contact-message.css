@@ -25,3 +25,15 @@
 .searchTxt {
     width: 260px !important;
 }
+
+.contactBtn[disabled] {
+    opacity: .7;
+}
+
+table tr th:nth-child(6) {
+    width: 110px;
+}
+
+.replyMessage {
+    height: 200px !important;
+}

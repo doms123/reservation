@@ -4,7 +4,7 @@ class Model extends CI_Model {
 		$sql 	= "SELECT * FROM tbl_user WHERE username = ? AND pass = ?";
 		$data 	= array($username, md5($pass));
 		$query 	= $this->db->query($sql, $data);
-		return count($query->row());
+		return count($query->result());
   }
   
   public function getAddRoom($images, $name, $desc, $price, $roomCount, $guestCount, $type) {
@@ -65,7 +65,7 @@ class Model extends CI_Model {
   }
 
   public function getSingleBook($editId) {
-    $sql = "SELECT b.roomId, b.bookId, b.guestName, b.guestContact, b.guestEmail, b.checkIn, b.checkOut, r.name, b.roomNo, b.status, b.active FROM tbl_booking b INNER JOIN tbl_room r ON r.roomId = b.roomId WHERE b.bookId = ? AND b.active = ?";
+    $sql = "SELECT TIMESTAMPDIFF(DAY, b.checkIn, b.checkOut) as totalDays, b.bookNo, b.roomId, b.bookId, b.guestName, b.guestContact, b.guestEmail, b.checkIn, b.checkOut, r.name, b.roomNo, b.status, b.active, r.guestCount, r.description, r.price FROM tbl_booking b INNER JOIN tbl_room r ON r.roomId = b.roomId WHERE b.bookId = ? AND b.active = ?";
     $data = array($editId, 1);
     return $this->db->query($sql, $data);
   }
@@ -83,6 +83,19 @@ class Model extends CI_Model {
     return $this->db->query($sql, $data);
   }
 
+  public function multipleBookAction($id, $type) {
+    if ($type == 'delete') {
+      $sql = "UPDATE tbl_booking set `active` = 0 WHERE bookId = ?";
+    } else if ($type == 'confirm') {
+      $sql = "UPDATE tbl_booking set `status` = 1 WHERE bookId = ?";
+    } else if ($type == 'cancel') {
+      $sql = "UPDATE tbl_booking set `status` = 3 WHERE bookId = ?";
+    }
+    
+    $data = array($id);
+    return $this->db->query($sql, $data);
+  }
+  
   public function getAvailableRoom($checkIn, $checkOut) {
     $sql = "SELECT * FROM tbl_booking b 
             INNER JOIN tbl_room r ON r.roomId = b.roomId WHERE 
@@ -208,6 +221,12 @@ class Model extends CI_Model {
   public function getOrderCount() {
     $sql = "SELECT orderId FROM tbl_order WHERE `status` = ?";
     $data = array(2);
+    return count($this->db->query($sql, $data)->result());
+  }
+
+  public function getMessageCount() {
+    $sql = "SELECT contactId FROM tbl_contact WHERE `visible` = ?";
+    $data = array(1);
     return count($this->db->query($sql, $data)->result());
   }
 

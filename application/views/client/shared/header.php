@@ -45,7 +45,7 @@
         <li class="home"><a href="<?php echo base_url();?>">Home</a></li>
         <li class="reservation"><a href="<?php echo base_url('Main/booking');?>">Reservation</a></li>
         <li class="gallery"><a href="<?php echo base_url('Main/gallery');?>">Gallery</a></li>
-        <li><a href="#" class="orderBtn">Order Here</a></li>
+        <!-- <li><a href="#" class="orderBtn">Order Here</a></li> -->
         <li class="contact"><a href="<?php echo base_url('Main/contact');?>">Contact Us</a></li>
       </ul>
     </div>

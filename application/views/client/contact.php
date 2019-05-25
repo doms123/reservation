@@ -24,7 +24,7 @@
                             <div class="clear"></div>
                             <div class="form-label">
                                 <label>Contact Number</label>
-                                <input type="text" id="numbersOnly" placeholder="09XXXXXXXXX" class="contact">
+                                <input type="text" id="numbersOnly" maxlength="11" placeholder="09XXXXXXXXX" class="contact">
                             </div>
                             <div class="clear"></div>
                             <div class="form-label mb0">

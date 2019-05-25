@@ -36,7 +36,7 @@
                 <table class="roomTbl table table-hover">
                   <thead>
                   <tr>
-                    <th></th>
+                    <th><input type="checkbox" class="checkAll" title="check/uncheck all"></th>
                     <th>Booking No.</th>
                     <th>Customer</th>
                     <th>Contact</th>
@@ -55,7 +55,11 @@
                 </table>
               </div>
             </div>
-            <button class=" btn btn-danger btn-sm btnDeleteAll"><i class="fa fa-trash"></i> Delete (<span class="deleteCounter">0</span>)  items</button>
+            <div class="multipleBtns">
+              <button class=" btn btn-primary btn-sm btnConfirmAll"><i class="fa fa-check"></i> Confirm (<span class="checkCounter">0</span>) items</button>
+              <button class=" btn btn-warning btn-sm btnCancelAll"><i class="fa fa-times"></i> Cancel (<span class="checkCounter">0</span>) items</button>
+              <button class=" btn btn-danger btn-sm btnDeleteAll"><i class="fa fa-trash"></i> Delete (<span class="checkCounter">0</span>) items</button>
+            </div>
           </div>
         </div>
       </div>
@@ -77,7 +81,7 @@
                   </div>
                   <div class="form-group">
                     <label for="guestContact">Guest Contact Number</label>
-                    <input type="text" class="form-control guestContact" id="numbersOnly" placeholder="09XXXXXXXX" required>
+                    <input type="text" class="form-control guestContact" id="numbersOnly" maxlength="11" placeholder="09XXXXXXXX" required>
                   </div>
                   <div class="form-group">
                     <label for="guestContact">Guest Email Address</label>
@@ -155,14 +159,54 @@
               <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                 <span aria-hidden="true">&times;</span>
               </button>
-              <h4 class="modal-title">Delete Book</h4>
+              <h4 class="modal-title">Delete Book (<span class="checkCounter">0</span>)</h4>
             </div>
             <div class="modal-body">
               <p>Are you sure you want to delete?</p>
             </div>
             <div class="modal-footer">
               <button type="button" class="btn btn-default pull-left" data-dismiss="modal">Close</button>
-              <button type="submit" class="btn btn-primary deleteBookBtnMultiple">Ok</button>
+              <button type="submit" class="btn btn-primary multipleBookAction" data-type="delete">Ok</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="modal fade" id="modal-book-confirm-multiple">
+        <div class="modal-dialog">
+          <div class="modal-content">
+            <div class="modal-header">
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+              </button>
+              <h4 class="modal-title">Confirm Book (<span class="checkCounter">0</span>)</h4>
+            </div>
+            <div class="modal-body">
+              <p>Are you sure you want to confirm?</p>
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-default pull-left" data-dismiss="modal">Close</button>
+              <button type="submit" class="btn btn-primary multipleBookAction" data-type="confirm">Ok</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="modal fade" id="modal-book-cancel-multiple">
+        <div class="modal-dialog">
+          <div class="modal-content">
+            <div class="modal-header">
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+              </button>
+              <h4 class="modal-title">Cancel Book (<span class="checkCounter">0</span>)</h4>
+            </div>
+            <div class="modal-body">
+              <p>Are you sure you want to cancel?</p>
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-default pull-left" data-dismiss="modal">Close</button>
+              <button type="submit" class="btn btn-primary multipleBookAction" data-type="cancel">Ok</button>
             </div>
           </div>
         </div>

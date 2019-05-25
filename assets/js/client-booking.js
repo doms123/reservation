@@ -44,43 +44,56 @@ $(document).ready(function() {
     $.ajax({
       type: 'POST',
       url: `${baseUrl}/availableRoom`,
-      data: { checkIn, checkOut },
-      success: function({ success, result }) {
+      data: { checkIn, checkOut, isClient: true },
+      success: function({ success, result, allRooms }) {
+        let firstRes = result;
+
+        for (let b = 0; b < allRooms.length; b++) {
+          let index = firstRes.findIndex(x => x.name == allRooms[b].name);
+          if (index === -1) {
+            firstRes.push(allRooms[b]);
+          }
+        }
+
         html = '';
-        const maxLoop = result.length;
+        const maxLoop = firstRes.length;
         $(".row-title").text('Results');
         if (maxLoop) {
           for(let x = 0; x < maxLoop; x++) {
             html += `<div class="two-col clear">`;
               html += `<div class="item-col no-bg no-pd float-lt">`;
                 html += `<div class="slider">`;
-
-                for (let y = 0; y < result[x].img.length; y++) {
-                  html += `<div><img src="/reservation/uploads/${result[x].img[y]}" alt=""></div>`;
+                for (let y = 0; y < firstRes[x].img.length; y++) {
+                  html += `<div><img src="/reservation/uploads/${firstRes[x].img[y]}" alt=""></div>`;
                 }
-                  
                 html += `</div>`;
               html += `</div>`;
               html += `<div class="item-col float-rt">`;
-                html += `<p class="type-of-room">${result[x].name}</p>`;
-                html += `<p class="light-color">${result[x].description}</p>`;
-                html += `<p class="red">Maximum of ${result[x].guestCount}pax per room</p>`;
+                html += `<p class="type-of-room">${firstRes[x].name}</p>`;
+                html += `<p class="light-color">${firstRes[x].description}</p>`;
+                html += `<p class="red">Maximum of ${firstRes[x].guestCount}pax per room</p>`;
                 html += `<div class="clear mt30">`;
                   html += `<div class="float-lt">`;
-                    html += `<p>PRICE<br><span class="room-charges-price bold">${formatMoney(result[x].price)}</span><br>per night</p>`;
+                    html += `<p>PRICE<br><span class="room-charges-price bold">${formatMoney(firstRes[x].price)}</span><br>per night</p>`;
                   html += `</div>`;
                   html += `<div class="float-rt">`;
                     html += `<div class="agileits-room-type">`;
-                      html += `<label>Available Room</label>`;
-                      html += `<select class="selectRoom" required="">`;
-                        for (let z = 0; z < result[x].room.length; z++) {
-                          html += `<option value="${result[x].room[z]}">Room ${result[x].room[z]}</option>`;
-                        }
-                      html += `</select>`;
+                      if (firstRes[x].room) {
+                        html += `<label>Available Room</label>`;
+                        html += `<select class="selectRoom" required="">`;
+                          for (let z = 0; z < firstRes[x].room.length; z++) {
+                            html += `<option value="${firstRes[x].room[z]}">Room ${firstRes[x].room[z]}</option>`;
+                          }
+                        html += `</select>`;
+                      } else {
+                        html += `<label style="color: red;">No Available Room</label>`;
+                      }
                     html += `</div>`;
                   html += `</div>`;
                 html += `</div>`;
-                html += `<button type="button" data-id="${result[x].roomId}" data-room="${result[x].room[0]}" class="bookNow" disabled>Book Now</button>`;
+                if (firstRes[x].room) {
+                  html += `<button type="button" data-id="${firstRes[x].roomId}" data-room="${firstRes[x].room[0]}" class="bookNow" disabled>Book Now</button>`;
+                }
               html += `</div>`;
             html += `</div>`;
           }
@@ -91,10 +104,8 @@ $(document).ready(function() {
         
         $('.search-results .row').html(html);
         roomAvailable = result;
-        console.log('checkInDate', checkInDate);
-        console.log('checkOutDate', checkOutDate);
+
         if (checkInDate != checkOutDate) {
-          console.log('defaultDate', defaultDate);
           if (checkOutDate) {
             $('.bookNow').removeAttr('disabled');
           }
@@ -206,5 +217,10 @@ $(document).ready(function() {
         getRoomAvailable(checkInDate, checkOutDate);
       }
     });
+  });
+
+
+  $('.reserveCalendar').click(function() {
+    $('#modal-calendar').modal('show');
   });
 });

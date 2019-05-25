@@ -5,6 +5,9 @@
     <h1 class="agile-head text-center">Reservation</h1>
     <div class="container">
       <div class="inner white">
+        <div class="text-left">
+          <button class="reserveCalendar"><i class="fa fa-calendar"></i> View Reservation Calendar</button>
+        </div>
         <form action="#" method="post" class="agile_form">
           <div class="checkin agileits-left">
             <label>Check in</label>
@@ -15,8 +18,6 @@
             <input placeholder="dd/mm/yyyy" class="date checkOut" id="datepicker2" type="text" />
           </div>
           <div class="clear"></div>
-
-          
           <div class="search-results">
             <p class="row-title">Select a date for reservation</p>
             <div class="row">
@@ -56,7 +57,7 @@
                 </div>
                 <div class="form-group">
                   <label for="guestContact">Guest Contact Number</label>
-                  <input type="text" class="form-control guestContact" id="numbersOnly" placeholder="09XXXXXXXXX" required>
+                  <input type="text" class="form-control guestContact" id="numbersOnly" maxlength="11" placeholder="09XXXXXXXXX" required>
                 </div>
                 <div class="form-group">
                   <label for="guestContact">Guest Email Address</label>
@@ -95,11 +96,31 @@
         <div class="modal-body">
           <p>Your booking number is</p>
           <p class="bookingNo"></p>
-          <p>Thank you for booking! Please wait for the email about the instructions of your booking request. Please save your booking no. also, you will need it when ordering.</p>
+          <p>Thank you for booking! Please wait for the email about the instructions of your booking request</p>
         </div>
         <div class="modal-footer">
-          <button type="button" class="btn btn-default pull-left" data-dismiss="modal">Close</button>
-          <button type="button" data-dismiss="modal" class="btn btn-primary deleteBookBtn">Ok</button>
+          <button type="button" class="btn btn-default pull-left btn-sm" data-dismiss="modal">Close</button>
+          <button type="button" data-dismiss="modal" class="btn btn-primary deleteBookBtn btn-sm">Ok</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="modal fade" id="modal-calendar">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+          <h4 class="modal-title">Reservation Calendar</h4>
+        </div>
+        <div class="modal-body">
+          <div id="calendar"></div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-default pull-left btn-sm" data-dismiss="modal">Close</button>
+          <button type="button" data-dismiss="modal" class="btn btn-primary deleteBookBtn btn-sm">Ok</button>
         </div>
       </div>
     </div>
@@ -107,7 +128,7 @@
 
 <?php $this->load->view('client/shared/footer'); ?>
 <script src="<?php echo base_url('assets/js/client-booking.js'); ?>"></script>
-
+<script src="<?php echo base_url('assets/js/calendar.js'); ?>"></script>
 <script>
   $(function() {
     $('.menu .reservation').find('a').addClass('active');
