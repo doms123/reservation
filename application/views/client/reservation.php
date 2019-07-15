@@ -5,9 +5,16 @@
     <h1 class="agile-head text-center">Reservation</h1>
     <div class="container">
       <div class="inner white">
-        <div class="text-left">
+        <div class="text-right btnWrap01">
+          <button class="bookNowBtn" disabled><i class="fa fa-calendar"></i> Book now <span class="bookCountWrap">(<span class="bookCount">0</span>) <span class="roomTxt"></span></span></button>
+        </div>
+        <div class="text-left btnWrap02">
           <button class="reserveCalendar"><i class="fa fa-calendar"></i> View Reservation Calendar</button>
         </div>
+        <div class="text-left btnWrap02">
+          <button class="reserveHistory"><i class="fa fa-calendar"></i> Reservation History</button>
+        </div>
+        <div class="clearing"></div>
         <form action="#" method="post" class="agile_form">
           <div class="checkin agileits-left">
             <label>Check in</label>
@@ -36,18 +43,29 @@
             <button type="button" class="close" data-dismiss="modal" aria-label="Close">
               <span aria-hidden="true">&times;</span>
             </button>
-            <h4 class="modal-title"><span class="modalTitle">Room Reservation</span></h4>
+            <h4 class="modal-title"><span class="modalTitle">Rooms Booking</span></h4>
           </div>
           <div class="modal-body">
             <div class="box-body">
-              <div class="reservationDetails">
-                <h4>Reservation Details</h4>
-                <p><strong>Room Name:</strong> <span class="roomName"></span></p>
-                <p><strong>Room Number:</strong> <span class="roomNo"></span></p>
-                <p><strong>Number of Guest:</strong> <span class="guestCount"></span></p>
-                <p><strong>Check-in:</strong> <span class="roomCheckIn"></span> from 14:00</p>
-                <p><strong>Check-out:</strong> <span class="roomCheckOut"></span> until 11:00</p>
-                <p><strong>Description: </strong><br><span class="roomDesc"></span></p>
+              <div class="reservationDetails row">
+                <div class="box-body table-responsive no-padding">
+                  <table class="table table-hover table-striped">
+                    <thead>
+                      <tr>
+                        <th>Room Name</th>
+                        <th>Room No.</th>
+                        <th>Number of Guest</th>
+                        <th>Check In (from 14:00)</th>
+                        <th>Check Out (until 11:00)</th>
+                        <th>Price</th>
+                        <th>Action</th>
+                      </tr>
+                    </thead>
+                    <tbody class="bookList">
+                    </tbody>
+                  </table>
+                  <p class="gTotalWrap">Grand Total: Php <span class="gTotalBook"></span></p>
+                </div>
               </div>
               <div class="guestPaymentDetails">
                 <h4>Guest and Payment Details</h4>
@@ -66,7 +84,7 @@
               </div>
               <div class="guestPaymentDetails">
                 <h4>Room charges</h4>
-                <p><span class="roomPrice"></span> for <span class="nightCount"></span> night(s)</p>
+                <strong>Php <span class="roomPrice"></span></strong>
               </div>
               <div class="bookingPolicy">
                 <h4>Booking Policies</h4>
@@ -88,19 +106,16 @@
     <div class="modal-dialog">
       <div class="modal-content">
         <div class="modal-header">
-          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <button type="button" class="close btnRefresh" data-dismiss="modal" aria-label="Close">
             <span aria-hidden="true">&times;</span>
           </button>
           <h4 class="modal-title">Reservation success!</h4>
         </div>
         <div class="modal-body">
-          <p>Your booking number is</p>
-          <p class="bookingNo"></p>
           <p>Thank you for booking! Please wait for the email about the instructions of your booking request</p>
         </div>
         <div class="modal-footer">
-          <button type="button" class="btn btn-default pull-left btn-sm" data-dismiss="modal">Close</button>
-          <button type="button" data-dismiss="modal" class="btn btn-primary deleteBookBtn btn-sm">Ok</button>
+          <button type="button" data-dismiss="modal" class="btn btn-primary btn-sm btnRefresh">Ok</button>
         </div>
       </div>
     </div>
@@ -120,7 +135,74 @@
         </div>
         <div class="modal-footer">
           <button type="button" class="btn btn-default pull-left btn-sm" data-dismiss="modal">Close</button>
-          <button type="button" data-dismiss="modal" class="btn btn-primary deleteBookBtn btn-sm">Ok</button>
+          <button type="button" data-dismiss="modal" class="btn btn-primary btn-sm">Ok</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="modal fade" id="modal-book-delete">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+          <h4 class="modal-title">Delete Room</h4>
+        </div>
+        <div class="modal-body">
+          <p>Are you sure you want to delete?</p>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-default pull-left" data-dismiss="modal">Close</button>
+          <button type="submit" class="btn btn-primary deleteBookBtn">Ok</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="modal fade" id="modal-reserve-history">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close btnRefresh" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+          <h4 class="modal-title">Reservation History</h4>
+        </div>
+        <div class="modal-body">
+          <p class="reserveNotes">Email Address</p>
+          <form class="viewHistoryForm">
+            <div class="form-group">
+              <input type="text" class="form-control input sm historyEmail" placeholder="Enter email" required>
+            </div>
+            <button class="btn btn-primary btn-sm btnView"><i class="fa fa-eye"></i> View</button>
+          </form>
+          <div class="reservationHistory">
+            <div class="box-body table-responsive no-padding">
+              <table class="table table-hover table-striped">
+                <thead>
+                  <tr>
+                    <th>Room Name</th>
+                    <th>Room No.</th>
+                    <th>Number of Guest</th>
+                    <th>Check In (from 14:00)</th>
+                    <th>Check Out (until 11:00)</th>
+                    <th>Price</th>
+                    <th>Status</th>
+                  </tr>
+                </thead>
+                <tbody class="bookList">
+                  <tr>
+                    <td colspan="7">Please enter your email address to view your reservation history</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" data-dismiss="modal" class="btn btn-primary btn-sm">Ok</button>
         </div>
       </div>
     </div>

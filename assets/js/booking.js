@@ -272,17 +272,17 @@ $(document).ready(function() {
       success: function({ success }) {
         let text;
         if (type == 'confirm') {
-          text = 'confirmed';
+          text = 'Book has been confirmed';
         } else if (type == 'delete') {
-          text = 'deleted';
+          text = 'Book has been deleted';
         } else if (type == 'cancel') {
-          text = 'cancelled';
+          text = 'Action has been completed';
         }
         if (success) {
           bookList();
           $.toast({
             heading: 'Success',
-            text: `Book has been ${text}`,
+            text,
             icon: 'success',
             loader: false,
             position: 'bottom-center'
@@ -291,6 +291,8 @@ $(document).ready(function() {
           $('#modal-book-cancel-multiple').modal('hide');
           $('#modal-book-delete-multiple').modal('hide');
           $('.multipleBtns').hide();
+
+          $('.checkAll').prop('checked', false);
         }
       }
     });
@@ -310,7 +312,13 @@ $(document).ready(function() {
       data: {
         editId
       },
-      success: function({ result, success }) {
+      success: function({ result, success, isNotCancellable }) {
+        if (isNotCancellable) {
+          $('.cancelOption').hide();
+        } else {
+          $('.cancelOption').show();
+        }
+        
         const { guestName, guestContact, guestEmail, checkIn, checkOut, roomId, roomNo, status } = result[0];
         $('.guestName').val(guestName);
         $('.guestContact').val(guestContact);

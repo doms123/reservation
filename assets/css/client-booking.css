@@ -83,10 +83,12 @@ button[disabled], html input[disabled] {
   text-align: left;
 }
 
-.reserveCalendar {
+.reserveCalendar,
+.bookNowBtn,
+.reserveHistory {
   color: #fff;
   padding: 0.8em;
-  font-size: 0.9em;
+  font-size: 12px;
   cursor: pointer;
   border: none;
   background: #715633;
@@ -98,8 +100,16 @@ button[disabled], html input[disabled] {
   border: 1px solid #ccc;
 }
 
-.reserveCalendar i {
+.reserveHistory {
+  margin-right: 20px;
+}
+
+.reserveCalendar i,
+.bookNowBtn i,
+.bookNowBtn span,
+.reserveHistory i {
   color: #fff;
+  font-size: 12px;
 }
 
 .text-left {
@@ -122,5 +132,105 @@ button[disabled], html input[disabled] {
 
 #calendar {
   border: 1px solid #ddd;
+}
+
+.clearing {
+  clear: both;
+}
+
+.btnWrap01 {
+  float: left;
+}
+
+.btnWrap02 {
+  float: right;
+}
+
+.bookCountWrap {
+  display: none;
+}
+
+#modal-book-addEdit .modal-dialog {
+  width: 70%;
+}
+
+#modal-book-delete .modal-dialog {
+  width: 340px;
+}
+
+.reservationDetails table * {
+  font-size: 12px !important;
+}
+
+.reservationDetails table tr th:last-child,
+.reservationDetails table tr td:last-child {
+  text-align: center;
+}
+
+.reservationDetails table tr th,
+.reservationDetails table tr td {
+  vertical-align: middle !important;
+}
+
+.btnDeleteRoom i {
+  color: #fff;
+}
+
+.gTotalBook {
+  font-size: 12px;
+  color: #000;
+}
+
+.gTotalWrap {
+  margin-top: 15px;
+  font-size: 12px;
+  background: #f7f7f7;
+  color: #000;
+  padding: 10px;
+  text-align: right;
+  font-weight: bold;
+}
+
+.fc-view-container * {
+  white-space: initial;
+}
+
+.form-group label {
+  margin-bottom: 5px;
+}
+
+.reserveNotes {
+  margin-bottom: 15px;
+}
+
+.btnView i {
+  color: #fff;
+}
+
+.historyEmail {
+  width: 300px;
+}
+
+#modal-reserve-history .modal-dialog {
+  width: 60% !important;
+}
+
+.reservationHistory {
+  margin-top: 20px;
+}
+
+.reservationHistory * {
+  font-size: 12px !important;
+}
+
+@media (max-width: 767px) {
+  .reserveHistory {
+    margin-right: 0;
+    margin-top: 15px;
+  }
+
+  .historyEmail {
+    width: 100%;
+  }
 }
 

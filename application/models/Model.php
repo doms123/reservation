@@ -52,16 +52,40 @@ class Model extends CI_Model {
     return $this->db->query($sql, $data);
   }
 
-  public function getAddBook($bookNo, $guestName, $guestContact, $guestEmail, $checkIn, $checkOut, $roomType, $roomNo, $status) {
-    $sql = "INSERT INTO tbl_booking (`bookNo`, `guestName`, `guestContact`, `guestEmail`, `checkIn`, `checkOut`, `roomId`, `roomNo`, `status`, `active`) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
-    $data = array($bookNo, $guestName, $guestContact, $guestEmail, $checkIn, $checkOut, $roomType, $roomNo, $status, 1);
+  public function getAddBook($bookNo, $guestName, $guestContact, $guestEmail, $checkIn, $checkOut, $roomType, $roomNo, $status, $customerIP) {
+    $sql = "INSERT INTO tbl_booking (`bookNo`, `guestName`, `guestContact`, `guestEmail`, `checkIn`, `checkOut`, `roomId`, `roomNo`, `status`, `active`, `customerIP`) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+    $data = array($bookNo, $guestName, $guestContact, $guestEmail, $checkIn, $checkOut, $roomType, $roomNo, $status, 1, $customerIP);
     $this->db->query($sql, $data);
     return $this->db->insert_id();
+  }
+
+  public function getUpdateBook($guestName, $guestContact, $guestEmail, $bookId) {
+    $sql = "UPDATE tbl_booking SET `guestName` = ?, `guestContact` = ?, `guestEmail` = ? WHERE bookId = ?";
+    $data = array($guestName, $guestContact, $guestEmail, $bookId);
+    return $this->db->query($sql, $data);
   }
 
   public function getBookList() {
     $sql = "SELECT b.bookNo, b.bookId, b.guestName, b.guestContact, b.guestEmail, b.checkIn, b.checkOut, r.name, b.roomNo, b.status, r.type FROM tbl_booking b INNER JOIN tbl_room r ON r.roomId = b.roomId WHERE b.active = ? ORDER BY b.dateAdded DESC";
     return $this->db->query($sql, 1);
+  }
+
+  public function getReservationCart($customerIP) {
+    $sql = "SELECT b.bookNo, b.bookId, b.guestName, b.guestContact, b.guestEmail, b.checkIn, b.checkOut, r.name, b.roomNo, b.status, r.type, b.customerIP FROM tbl_booking b INNER JOIN tbl_room r ON r.roomId = b.roomId WHERE b.active = ? AND b.guestEmail = '' AND b.customerIP = ? ORDER BY b.dateAdded DESC";
+    $data = array(1, $customerIP);
+    return $this->db->query($sql, $data)->result();
+  }
+
+  public function getBookCart($customerIP) {
+    $sql = "SELECT TIMESTAMPDIFF(DAY, b.checkIn, b.checkOut) as totalDays, b.bookNo, b.bookId, b.guestName, b.guestContact, b.guestEmail, b.checkIn, b.checkOut, r.name, b.roomNo, b.status, r.type, b.customerIP, r.price, r.guestCount, r.description FROM tbl_booking b INNER JOIN tbl_room r ON r.roomId = b.roomId WHERE b.active = ? AND b.customerIP = ? AND b.guestEmail = '' ORDER BY b.dateAdded DESC";
+    $data = array(1, $customerIP);
+    return $this->db->query($sql, $data);
+  }
+
+  public function getReserveHistory($customerIP, $email) {
+    $sql = "SELECT TIMESTAMPDIFF(DAY, b.checkIn, b.checkOut) as totalDays, b.bookNo, b.bookId, b.guestName, b.guestContact, b.guestEmail, b.checkIn, b.checkOut, r.name, b.roomNo, b.status, r.type, b.customerIP, r.price, r.guestCount, r.description FROM tbl_booking b INNER JOIN tbl_room r ON r.roomId = b.roomId WHERE b.active = ? AND b.customerIP = ? AND b.guestEmail = ? ORDER BY b.dateAdded DESC";
+    $data = array(1, $customerIP, $email);
+    return $this->db->query($sql, $data);
   }
 
   public function getSingleBook($editId) {
@@ -95,12 +119,18 @@ class Model extends CI_Model {
     $data = array($id);
     return $this->db->query($sql, $data);
   }
+
+  public function checkBookCancellable($bookId) {
+    $sql = "SELECT * FROM tbl_booking WHERE bookId = ? AND DATEDIFF(checkIn, CURDATE()) < 2";
+    $data = array($bookId);
+    return $this->db->query($sql, $data)->result();
+  }
   
   public function getAvailableRoom($checkIn, $checkOut) {
-    $sql = "SELECT * FROM tbl_booking b 
-            INNER JOIN tbl_room r ON r.roomId = b.roomId WHERE 
-            (DATE(b.checkIn) <= ? AND DATE(b.checkOut) >= ?) 
-            OR (DATE(b.checkIn) <= ? AND DATE(b.checkOut) >= ?)";
+    $sql = "SELECT * FROM tbl_room r 
+            INNER JOIN tbl_booking b ON r.roomId = b.roomId WHERE 
+            ((DATE(b.checkIn) <= ? AND DATE(b.checkOut) >= ?) 
+            OR (DATE(b.checkIn) <= ? AND DATE(b.checkOut) >= ?)) AND b.active = 1";
     $data = array($checkIn, $checkIn, $checkOut, $checkOut);
     return $this->db->query($sql, $data)->result();
   }
@@ -262,4 +292,6 @@ class Model extends CI_Model {
     $data = array(0, $deleteId);
     return $this->db->query($sql, $data);
   }
+
+
 }

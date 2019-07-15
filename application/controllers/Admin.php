@@ -294,10 +294,12 @@ class admin extends CI_Controller {
   public function singleBook() {
     $editId = sanitize($this->input->post('editId'));
     $getBookList	= $this->model->getSingleBook($editId);
+    $isNotCancellable = $this->model->checkBookCancellable($editId); 
 
     $data = array(
       'success' => 1,
-      'result' => $getBookList->result()
+      'result' => $getBookList->result(),
+      'isNotCancellable' => count($isNotCancellable)
     );
 
     genJson($data);
@@ -319,7 +321,14 @@ class admin extends CI_Controller {
     $type = $this->input->post('type');
 
     for($x = 0; $x < count($ids); $x++) {
-      $getDeleteBook	= $this->model->multipleBookAction($ids[$x], $type);
+      if ($type == 'cancel') {
+        $isNotCancellable = $this->model->checkBookCancellable($ids[$x]);
+        if (!count($isNotCancellable)) {
+          $getDeleteBook	= $this->model->multipleBookAction($ids[$x], $type);
+        }
+      } else {
+        $getDeleteBook	= $this->model->multipleBookAction($ids[$x], $type);
+      }
     }
 
     $data = array(
@@ -346,6 +355,7 @@ class admin extends CI_Controller {
     $checkOut = convertSlashDateToDash(sanitize($this->input->post('checkOut')));
 
     $getAvRoom	= $this->model->getAvailableRoom($checkIn, $checkOut);
+
     $getAllRooms = $this->model->getAllRooms();
 
     // GET the list of rooms with room no.
@@ -435,6 +445,18 @@ class admin extends CI_Controller {
     genJson($data);
   }
 
+  public function reservationCart() {
+    $customerIP   = $_SERVER['REMOTE_ADDR'];
+    $getReservationCart = $this->model->getReservationCart($customerIP);
+
+    $data = array(
+      'success' => 1,
+      'count' => count($getReservationCart),
+    );
+
+    genJson($data);
+  }
+
   public function clientBook() {
     $bookNo       = randHash();
     $guestName    = sanitize($this->input->post('guestName'));
@@ -444,108 +466,125 @@ class admin extends CI_Controller {
     $checkOut     = sanitize(date("Y-m-d", strtotime($this->input->post('checkOut'))));
     $roomType     = sanitize($this->input->post('roomType'));
     $roomNo       = sanitize($this->input->post('roomNo'));
+    $customerIP   = $_SERVER['REMOTE_ADDR'];
+    $isCart       = sanitize($this->input->post('isCart'));
 
-    $insertId = $this->model->getAddBook($bookNo, $guestName, $guestContact, $guestEmail, $checkIn, $checkOut, $roomType, $roomNo, 2);
-    $getSingleBook = $this->model->getSingleBook($insertId)->row();
+    $getBookCart = $this->model->getBookCart($customerIP);
 
-    $config = Array(
-      'protocol' => 'smtp',
-      'smtp_host' => 'ssl://smtp.googlemail.com',
-      'smtp_port' => 465,
-      'smtp_user' => 'hhacienda8@gmail.com',
-      'smtp_pass' => 'Pass123!',
-      'mailtype' => 'html',
-      'charset' => 'iso-8859-1',
-      'wordwrap' => TRUE
-    );
+    if ($isCart) {
+      $insertId = $this->model->getAddBook($bookNo, $guestName, $guestContact, $guestEmail, $checkIn, $checkOut, $roomType, $roomNo, 2, $customerIP);
+      $getSingleBook = $this->model->getSingleBook($insertId)->row();
+      $result = false;
+    } else {
 
-    $this->load->library('email', $config);
-    $this->email->from('hhacienda8@gmail.com', 'Admin');
-    $this->email->to($guestEmail);
-    $this->email->subject('HACIENDA GALEA RESERVATION');
+      $config = Array(
+        'protocol' => 'smtp',
+        'smtp_host' => 'ssl://smtp.googlemail.com',
+        'smtp_port' => 465,
+        'smtp_user' => 'hhacienda8@gmail.com',
+        'smtp_pass' => 'Pass123!',
+        'mailtype' => 'html',
+        'charset' => 'iso-8859-1',
+        'wordwrap' => TRUE
+      );
 
-    $checkIn = new DateTime($getSingleBook->checkIn);
-    $checkInDate = date_format($checkIn, 'N, F d Y');
+      $this->load->library('email', $config);
+      $this->email->from('hhacienda8@gmail.com', 'Admin');
+      $this->email->to($guestEmail);
+      $this->email->subject('HACIENDA GALEA RESERVATION');
 
-    $checkOut = new DateTime($getSingleBook->checkOut);
-    $checkOutDate = date_format($checkOut, 'N, F d Y');
+      $message = '
+  <p>Hi '.$guestName.', thank you for making a reservation!</p>
+  <br>
+  <p>Please see the following room reservation details</p>';
+$gt = 0;
+// print_r($getBookCart->result());
+// die();
+foreach($getBookCart->result() as $cart) {
+  // print_r($cart);
+  // die();
+  $this->model->getUpdateBook($guestName, $guestContact, $guestEmail, $cart->bookId);
 
-    $totalAmount = $getSingleBook->totalDays * $getSingleBook->price;
+  $checkIn = new DateTime($cart->checkIn);
+  $checkInDate = date_format($checkIn, 'F d, Y');
 
-    $message = '
-<p>Hi '.$guestName.', thank you for making a reservation!</p>
-<br>
-<p>Please see the following reservation details</p>
+  $checkOut = new DateTime($cart->checkOut);
+  $checkOutDate = date_format($checkOut, 'F d, Y');
 
-<table style="border: 1px solid #000; border-collapse: collapse;">
-  <tr>
-    <td style="border: 1px solid #000; padding: 5px;">
-      <strong>Booking No.:</strong> '.$getSingleBook->bookNo.'
-    </td>
-  </tr>
-  <tr>
-    <td style="border: 1px solid #000; padding: 5px;">
-      <strong>Room Name:</strong> '.$getSingleBook->name.'
-    </td>
-  </tr>
-  <tr>
-    <td style="border: 1px solid #000; padding: 5px;">
-      <strong>Room Number:</strong> '.$getSingleBook->roomNo.'
-    </td>
-  </tr>
-  <tr>
-    <td style="border: 1px solid #000; padding: 5px;">
-      <strong>Number of Guest:</strong> '.$getSingleBook->guestCount.'
-    </td>
-  </tr>
-  <tr>
-    <td style="border: 1px solid #000; padding: 5px;">
-      <strong>Check-in:</strong> '.$checkInDate.' from 14:00
-    </td>
-  </tr>
-  <tr>
-    <td style="border: 1px solid #000; padding: 5px;">
-      <strong>Check-out:</strong> '.$checkOutDate.' until 11:00
-    </td>
-  </tr>
-  <tr>
-    <td style="border: 1px solid #000; padding: 5px;">
-      <strong>Description: </strong> '.$getSingleBook->description.'
-    </td>
-  </tr>
-  <tr>
-    <td style="border: 1px solid #000; padding: 5px;">
-      <strong>Total Amount:</strong> Php '.number_format($totalAmount, 2).'
-    </td>
-  </tr>
-</table>
+  $totalAmount = $cart->totalDays * $cart->price;
 
-<p>To confirm your reservation, please send to this BDO account no.: <strong>001820479151</strong> an amount of '.number_format($totalAmount / 2, 2).' for the 50% reservation down payment </p>
-<br>
-<p><strong>Booking Policies</strong></p>
-<p>If payment has been made:</p>
-<ul>
-	<li>30% deposit payment will be forfeited if cancellation is made two (2) days before the function</li>
-    <li>50% deposit payment will be forfeited if cancellation is made one (1) day before the function</li>
-</ul>
-<br>
-<p>Best Regards,</p>
-<p style="margin-top: -10px;">Hacienda Galea Management</p>
-';
+  $message .= '
+    <table style="border: 1px solid #000; border-collapse: collapse; margin-bottom: 20px;">
+      <tr>
+        <td style="border: 1px solid #000; padding: 5px;">
+          <strong>Booking No.:</strong> '.$cart->bookNo.'
+        </td>
+      </tr>
+      <tr>
+        <td style="border: 1px solid #000; padding: 5px;">
+          <strong>Room Name:</strong> '.$cart->name.'
+        </td>
+      </tr>
+      <tr>
+        <td style="border: 1px solid #000; padding: 5px;">
+          <strong>Room Number:</strong> '.$cart->roomNo.'
+        </td>
+      </tr>
+      <tr>
+        <td style="border: 1px solid #000; padding: 5px;">
+          <strong>Number of Guest:</strong> '.$cart->guestCount.'
+        </td>
+      </tr>
+      <tr>
+        <td style="border: 1px solid #000; padding: 5px;">
+          <strong>Check-in:</strong> '.$checkInDate.' from 14:00
+        </td>
+      </tr>
+      <tr>
+        <td style="border: 1px solid #000; padding: 5px;">
+          <strong>Check-out:</strong> '.$checkOutDate.' until 11:00
+        </td>
+      </tr>
+      <tr>
+        <td style="border: 1px solid #000; padding: 5px;">
+          <strong>Description: </strong> '.$cart->description.'
+        </td>
+      </tr>
+      <tr>
+        <td style="border: 1px solid #000; padding: 5px;">
+          <strong>Total Amount:</strong> Php '.number_format($totalAmount, 2).'
+        </td>
+      </tr>
+    </table>';
 
-    $this->email->message($message);
-    $this->email->set_newline("\r\n");
+    $gt = $gt + $totalAmount;
+}
 
-    $result = $this->email->send();
+$message .= '
+  <p>To confirm your reservation, please send to this BDO account no.: <strong>001820479151</strong> an amount of '.number_format($gt / 2, 2).' for the 50% reservation down payment </p>
+  <br>
+  <p><strong>Booking Policies</strong></p>
+  <p>If payment has been made:</p>
+  <ul>
+    <li>30% deposit payment will be forfeited if cancellation is made two (2) days before the function</li>
+      <li>50% deposit payment will be forfeited if cancellation is made one (1) day before the function</li>
+  </ul>
+  <br>
+  <p>Best Regards,</p>
+  <p style="margin-top: -10px;">Hacienda Galea Management</p>
+  ';
 
+      $this->email->message($message);
+      $this->email->set_newline("\r\n");
+
+      $result = $this->email->send();
+}
    
-
-
     $data = array(
       'success' => 1,
       'bookNo' => $bookNo,
-      'response' => $getSingleBook,
-      'mail' => $result
+      'mail' => $result,
+      'cart' => $getBookCart->result()
     );
 
     genJson($data);
@@ -876,6 +915,45 @@ class admin extends CI_Controller {
 
     $data = array(
       'success' => 1,
+    );
+
+    genJson($data);
+  }
+
+  public function bookCart() {
+    $customerIP   = $_SERVER['REMOTE_ADDR'];
+
+    $getBookCart = $this->model->getBookCart($customerIP);
+
+    $data = array(
+      'success' => 1,
+      'result' => $getBookCart->result()
+    );
+
+    genJson($data);
+  }
+
+  public function deleteBookCart() {
+    $bookId = sanitize($this->input->post('bookId'));
+
+    $getDeleteBook	= $this->model->getDeleteBook($bookId);
+
+    $data = array(
+      'success' => 1,
+    );
+
+    genJson($data);
+  }
+
+  public function reserveHistory() {
+    $customerIP   = $_SERVER['REMOTE_ADDR'];
+    $email = sanitize($this->input->post('email'));
+
+    $getReserveHistory = $this->model->getReserveHistory($customerIP, $email);
+
+    $data = array(
+      'success' => 1,
+      'result' => $getReserveHistory->result()
     );
 
     genJson($data);

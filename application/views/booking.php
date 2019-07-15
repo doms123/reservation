@@ -57,7 +57,7 @@
             </div>
             <div class="multipleBtns">
               <button class=" btn btn-primary btn-sm btnConfirmAll"><i class="fa fa-check"></i> Confirm (<span class="checkCounter">0</span>) items</button>
-              <button class=" btn btn-warning btn-sm btnCancelAll"><i class="fa fa-times"></i> Cancel (<span class="checkCounter">0</span>) items</button>
+              <button class=" btn btn-warning btn-sm btnCancelAll"><i class="fa fa-times"></i> Cancel</button>
               <button class=" btn btn-danger btn-sm btnDeleteAll"><i class="fa fa-trash"></i> Delete (<span class="checkCounter">0</span>) items</button>
             </div>
           </div>
@@ -119,7 +119,7 @@
                       <option value="0">Select Status</option>
                       <option value="1">Confirmed</option>
                       <option value="2">Pending</option>
-                      <option value="3">Canceled</option>
+                      <option value="3" class="cancelOption">Cancelled</option>
                     </select>
                   </div>
                 </div>
@@ -202,6 +202,7 @@
               <h4 class="modal-title">Cancel Book (<span class="checkCounter">0</span>)</h4>
             </div>
             <div class="modal-body">
+              <p>Cancellation process: The system can only cancel the booking if the check-in date is 2 days or more later from the current date</p>
               <p>Are you sure you want to cancel?</p>
             </div>
             <div class="modal-footer">
